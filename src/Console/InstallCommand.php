@@ -3,9 +3,7 @@
 namespace Laravel\Sail\Console;
 
 use Illuminate\Console\Command;
-use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Process\Process;
 
 #[AsCommand(name: 'sail:install')]
 class InstallCommand extends Command

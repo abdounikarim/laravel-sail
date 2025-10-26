@@ -69,7 +69,6 @@ trait InteractsWithDockerComposeServices
     /**
      * Build the Docker Compose file.
      *
-     * @param  array  $services
      * @return void
      */
     protected function buildDockerCompose(array $services)
@@ -78,7 +77,7 @@ trait InteractsWithDockerComposeServices
 
         $compose = file_exists($composePath)
             ? Yaml::parseFile($composePath)
-            : Yaml::parse(file_get_contents(__DIR__ . '/../../../stubs/compose.stub'));
+            : Yaml::parse(file_get_contents(__DIR__.'/../../../stubs/compose.stub'));
 
         // Prepare the installation of the "mariadb-client" package if the MariaDB service is used...
         if (in_array('mariadb', $services)) {
@@ -101,7 +100,7 @@ trait InteractsWithDockerComposeServices
             ->filter(function ($service) use ($compose) {
                 return ! array_key_exists($service, $compose['services'] ?? []);
             })->each(function ($service) use (&$compose) {
-                $compose['services'][$service] = Yaml::parseFile(__DIR__ . "/../../../stubs/{$service}.stub")[$service];
+                $compose['services'][$service] = Yaml::parseFile(__DIR__."/../../../stubs/{$service}.stub")[$service];
             });
 
         // Merge volumes...
@@ -129,7 +128,6 @@ trait InteractsWithDockerComposeServices
     /**
      * Replace the Host environment variables in the app's .env file.
      *
-     * @param  array  $services
      * @return void
      */
     protected function replaceEnvVariables(array $services)
@@ -154,21 +152,21 @@ trait InteractsWithDockerComposeServices
 
         if (in_array('mysql', $services)) {
             $environment = preg_replace('/DB_CONNECTION=.*/', 'DB_CONNECTION=mysql', $environment);
-            $environment = str_replace('DB_HOST=127.0.0.1', "DB_HOST=mysql", $environment);
-        }elseif (in_array('pgsql', $services)) {
+            $environment = str_replace('DB_HOST=127.0.0.1', 'DB_HOST=mysql', $environment);
+        } elseif (in_array('pgsql', $services)) {
             $environment = preg_replace('/DB_CONNECTION=.*/', 'DB_CONNECTION=pgsql', $environment);
-            $environment = str_replace('DB_HOST=127.0.0.1', "DB_HOST=pgsql", $environment);
-            $environment = str_replace('DB_PORT=3306', "DB_PORT=5432", $environment);
+            $environment = str_replace('DB_HOST=127.0.0.1', 'DB_HOST=pgsql', $environment);
+            $environment = str_replace('DB_PORT=3306', 'DB_PORT=5432', $environment);
         } elseif (in_array('mariadb', $services)) {
             if ($this->laravel->config->has('database.connections.mariadb')) {
                 $environment = preg_replace('/DB_CONNECTION=.*/', 'DB_CONNECTION=mariadb', $environment);
             }
 
-            $environment = str_replace('DB_HOST=127.0.0.1', "DB_HOST=mariadb", $environment);
+            $environment = str_replace('DB_HOST=127.0.0.1', 'DB_HOST=mariadb', $environment);
         }
 
-        $environment = str_replace('DB_USERNAME=root', "DB_USERNAME=sail", $environment);
-        $environment = preg_replace("/DB_PASSWORD=(.*)/", "DB_PASSWORD=password", $environment);
+        $environment = str_replace('DB_USERNAME=root', 'DB_USERNAME=sail', $environment);
+        $environment = preg_replace('/DB_PASSWORD=(.*)/', 'DB_PASSWORD=password', $environment);
 
         if (in_array('memcached', $services)) {
             $environment = str_replace('MEMCACHED_HOST=127.0.0.1', 'MEMCACHED_HOST=memcached', $environment);
@@ -178,7 +176,7 @@ trait InteractsWithDockerComposeServices
             $environment = str_replace('REDIS_HOST=127.0.0.1', 'REDIS_HOST=redis', $environment);
         }
 
-        if (in_array('valkey',$services)){
+        if (in_array('valkey', $services)) {
             $environment = str_replace('REDIS_HOST=127.0.0.1', 'REDIS_HOST=valkey', $environment);
         }
 
@@ -202,20 +200,20 @@ trait InteractsWithDockerComposeServices
         }
 
         if (in_array('soketi', $services)) {
-            $environment = preg_replace("/^BROADCAST_DRIVER=(.*)/m", "BROADCAST_DRIVER=pusher", $environment);
-            $environment = preg_replace("/^PUSHER_APP_ID=(.*)/m", "PUSHER_APP_ID=app-id", $environment);
-            $environment = preg_replace("/^PUSHER_APP_KEY=(.*)/m", "PUSHER_APP_KEY=app-key", $environment);
-            $environment = preg_replace("/^PUSHER_APP_SECRET=(.*)/m", "PUSHER_APP_SECRET=app-secret", $environment);
-            $environment = preg_replace("/^PUSHER_HOST=(.*)/m", "PUSHER_HOST=soketi", $environment);
-            $environment = preg_replace("/^PUSHER_PORT=(.*)/m", "PUSHER_PORT=6001", $environment);
-            $environment = preg_replace("/^PUSHER_SCHEME=(.*)/m", "PUSHER_SCHEME=http", $environment);
-            $environment = preg_replace("/^VITE_PUSHER_HOST=(.*)/m", "VITE_PUSHER_HOST=localhost", $environment);
+            $environment = preg_replace('/^BROADCAST_DRIVER=(.*)/m', 'BROADCAST_DRIVER=pusher', $environment);
+            $environment = preg_replace('/^PUSHER_APP_ID=(.*)/m', 'PUSHER_APP_ID=app-id', $environment);
+            $environment = preg_replace('/^PUSHER_APP_KEY=(.*)/m', 'PUSHER_APP_KEY=app-key', $environment);
+            $environment = preg_replace('/^PUSHER_APP_SECRET=(.*)/m', 'PUSHER_APP_SECRET=app-secret', $environment);
+            $environment = preg_replace('/^PUSHER_HOST=(.*)/m', 'PUSHER_HOST=soketi', $environment);
+            $environment = preg_replace('/^PUSHER_PORT=(.*)/m', 'PUSHER_PORT=6001', $environment);
+            $environment = preg_replace('/^PUSHER_SCHEME=(.*)/m', 'PUSHER_SCHEME=http', $environment);
+            $environment = preg_replace('/^VITE_PUSHER_HOST=(.*)/m', 'VITE_PUSHER_HOST=localhost', $environment);
         }
 
         if (in_array('mailpit', $services)) {
-            $environment = preg_replace("/^MAIL_MAILER=(.*)/m", "MAIL_MAILER=smtp", $environment);
-            $environment = preg_replace("/^MAIL_HOST=(.*)/m", "MAIL_HOST=mailpit", $environment);
-            $environment = preg_replace("/^MAIL_PORT=(.*)/m", "MAIL_PORT=1025", $environment);
+            $environment = preg_replace('/^MAIL_MAILER=(.*)/m', 'MAIL_MAILER=smtp', $environment);
+            $environment = preg_replace('/^MAIL_HOST=(.*)/m', 'MAIL_HOST=mailpit', $environment);
+            $environment = preg_replace('/^MAIL_PORT=(.*)/m', 'MAIL_PORT=1025', $environment);
         }
 
         if (in_array('rabbitmq', $services)) {

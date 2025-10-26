@@ -45,7 +45,7 @@ class PublishCommand extends Command
                     './vendor/laravel/sail/runtimes/8.1',
                     './vendor/laravel/sail/runtimes/8.0',
                     './vendor/laravel/sail/database/mysql',
-                    './vendor/laravel/sail/database/pgsql'
+                    './vendor/laravel/sail/database/pgsql',
                 ],
                 [
                     './docker/8.4',
@@ -54,7 +54,7 @@ class PublishCommand extends Command
                     './docker/8.1',
                     './docker/8.0',
                     './docker/mysql',
-                    './docker/pgsql'
+                    './docker/pgsql',
                 ],
                 file_get_contents($this->composePath())
             )
